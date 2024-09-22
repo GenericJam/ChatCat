@@ -1,0 +1,11 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input field={f[:group]} type="text" label="Group" />
+  <.input field={f[:cat_pic]} type="text" label="Cat pic" />
+  <.input field={f[:message]} type="text" label="Message" />
+  <:actions>
+    <.button>Save Message</.button>
+  </:actions>
+</.simple_form>
