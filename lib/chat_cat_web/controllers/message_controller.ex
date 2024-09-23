@@ -5,7 +5,7 @@ defmodule ChatCatWeb.MessageController do
   alias ChatCat.Chats.Message
 
   def index(conn, _params) do
-    messages = Chats.list_messages()
+    messages = Chats.list_messages([:sender, :receiver])
     render(conn, :index, messages: messages)
   end
 
@@ -27,13 +27,19 @@ defmodule ChatCatWeb.MessageController do
   end
 
   def show(conn, %{"id" => id}) do
-    message = Chats.get_message!(id)
+    message = Chats.get_message!(id, [:sender, :receiver])
     render(conn, :show, message: message)
   end
 
   def edit(conn, %{"id" => id}) do
-    message = Chats.get_message!(id)
+    message = Chats.get_message!(id, [:sender, :receiver])
     changeset = Chats.change_message(message)
+
+    changeset =
+      changeset
+      |> Map.put(:sender_email, message.sender.email)
+      |> Map.put(:receiver_email, message.receiver[:email])
+
     render(conn, :edit, message: message, changeset: changeset)
   end
 

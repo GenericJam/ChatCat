@@ -6,6 +6,7 @@ defmodule ChatCat.Chats do
   import Ecto.Query, warn: false
   alias ChatCat.Repo
 
+  alias ChatCat.Accounts
   alias ChatCat.Chats.Message
 
   @doc """
@@ -17,8 +18,8 @@ defmodule ChatCat.Chats do
       [%Message{}, ...]
 
   """
-  def list_messages do
-    Repo.all(Message)
+  def list_messages(preloads \\ []) do
+    Repo.all(Message) |> Repo.preload(preloads)
   end
 
   @doc """
@@ -35,7 +36,8 @@ defmodule ChatCat.Chats do
       ** (Ecto.NoResultsError)
 
   """
-  def get_message!(id), do: Repo.get!(Message, id)
+  def get_message!(id, preloads \\ []),
+    do: Repo.get!(Message, id) |> Repo.preload(preloads)
 
   @doc """
   Creates a message.
@@ -50,6 +52,35 @@ defmodule ChatCat.Chats do
 
   """
   def create_message(attrs \\ %{}) do
+    attrs =
+      attrs
+      |> Enum.map(fn
+        {"group", value} ->
+          {:group, value}
+
+        {"cat_pic", value} ->
+          {:cat_pic, value}
+
+        {"message", value} ->
+          {:message, value}
+
+        {"sender_email", email} ->
+          sender = email |> String.trim() |> Accounts.get_user_by_email()
+          {:sender_id, sender.id}
+
+        {"receiver_email", nil} ->
+          {:receiver, nil}
+
+        {"receiver_email", email} ->
+          receiver =
+            email
+            |> String.trim()
+            |> Accounts.get_user_by_email()
+
+          {:receiver_id, receiver.id}
+      end)
+      |> Map.new()
+
     %Message{}
     |> Message.changeset(attrs)
     |> Repo.insert()

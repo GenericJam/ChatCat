@@ -2,6 +2,8 @@
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
+  <.input field={f[:sender_email]} type="text" label="Sender" />
+  <.input field={f[:receiver_email]} type="text" label="Receiver" />
   <.input field={f[:group]} type="text" label="Group" />
   <.input field={f[:cat_pic]} type="text" label="Cat pic" />
   <.input field={f[:message]} type="text" label="Message" />

@@ -35,7 +35,12 @@ defmodule ChatCat.ChatsTest do
 
     test "update_message/2 with valid data updates the message" do
       message = message_fixture()
-      update_attrs = %{message: "some updated message", group: "some updated group", cat_pic: "some updated cat_pic"}
+
+      update_attrs = %{
+        message: "some updated message",
+        group: "some updated group",
+        cat_pic: "some updated cat_pic"
+      }
 
       assert {:ok, %Message{} = message} = Chats.update_message(message, update_attrs)
       assert message.message == "some updated message"

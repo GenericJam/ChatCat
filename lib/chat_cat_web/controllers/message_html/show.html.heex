@@ -9,6 +9,8 @@
 </.header>
 
 <.list>
+  <:item title="Sender"><%= @message.sender.email %></:item>
+  <:item title="Receiver"><%= @message.receiver[:email] %></:item>
   <:item title="Group"><%= @message.group %></:item>
   <:item title="Cat pic"><%= @message.cat_pic %></:item>
   <:item title="Message"><%= @message.message %></:item>

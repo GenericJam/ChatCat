@@ -42,6 +42,11 @@ defmodule ChatCat.Accounts.User do
     |> validate_password(opts)
   end
 
+  # default changeset that does nothing
+  def changeset(_user, _attrs, _opts \\ []) do
+    %Ecto.Changeset{}
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])

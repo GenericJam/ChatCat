@@ -8,6 +8,10 @@
 </.header>
 
 <.table id="messages" rows={@messages} row_click={&JS.navigate(~p"/messages/#{&1}")}>
+  <:col :let={message} label="Sender"><%= message.sender.email %></:col>
+  <:col :let={message} label="Receiver">
+    <%= if message.receiver != nil, do: message.receiver.email, else: "" %>
+  </:col>
   <:col :let={message} label="Group"><%= message.group %></:col>
   <:col :let={message} label="Cat pic"><%= message.cat_pic %></:col>
   <:col :let={message} label="Message"><%= message.message %></:col>

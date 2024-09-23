@@ -4,7 +4,11 @@ defmodule ChatCatWeb.MessageControllerTest do
   import ChatCat.ChatsFixtures
 
   @create_attrs %{message: "some message", group: "some group", cat_pic: "some cat_pic"}
-  @update_attrs %{message: "some updated message", group: "some updated group", cat_pic: "some updated cat_pic"}
+  @update_attrs %{
+    message: "some updated message",
+    group: "some updated group",
+    cat_pic: "some updated cat_pic"
+  }
   @invalid_attrs %{message: nil, group: nil, cat_pic: nil}
 
   describe "index" do
