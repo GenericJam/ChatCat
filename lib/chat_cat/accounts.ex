@@ -8,6 +8,10 @@ defmodule ChatCat.Accounts do
 
   alias ChatCat.Accounts.{User, UserToken, UserNotifier}
 
+  def list_users(preloads \\ []) do
+    Repo.all(User) |> Repo.preload(preloads)
+  end
+
   ## Database getters
 
   @doc """

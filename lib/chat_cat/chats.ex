@@ -51,7 +51,39 @@ defmodule ChatCat.Chats do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_message(attrs \\ %{}) do
+  def create_message!(attrs = %{sender_email: _}) do
+    attrs =
+      attrs
+      |> Enum.map(fn
+        {:sender_email, email} ->
+          sender = email |> String.trim() |> Accounts.get_user_by_email()
+          {:sender_id, sender.id}
+
+        {:receiver_email, nil} ->
+          {:receiver, nil}
+
+        {:receiver_email, email} ->
+          receiver =
+            email
+            |> String.trim()
+            |> Accounts.get_user_by_email()
+
+          {:receiver_id, receiver.id}
+
+        other ->
+          other
+      end)
+      |> Map.new()
+
+    {:ok, message} =
+      %Message{}
+      |> Message.changeset(attrs)
+      |> Repo.insert()
+
+    message |> Repo.preload([:sender, :receiver])
+  end
+
+  def create_message(attrs = %{"sender_email" => _}) do
     attrs =
       attrs
       |> Enum.map(fn
