@@ -12,6 +12,7 @@ defmodule ChatCat.Application do
       ChatCat.Repo,
       {DNSCluster, query: Application.get_env(:chat_cat, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ChatCat.PubSub},
+      Supervisor.child_spec({Phoenix.PubSub, name: :new_message}, id: ChatCat.NewMessage),
       # Start the Finch HTTP client for sending emails
       {Finch, name: ChatCat.Finch},
       # Start a worker by calling: ChatCat.Worker.start_link(arg)

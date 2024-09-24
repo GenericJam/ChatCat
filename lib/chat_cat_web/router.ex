@@ -69,7 +69,9 @@ defmodule ChatCatWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-      live "/messages_live", MessagesLive, :edit
+      live "/messages_live", MessagesLive, :new
+
+      live "/messages_live/cat_menu", MessagesLive, :menu
     end
 
     resources "/messages", MessageController
