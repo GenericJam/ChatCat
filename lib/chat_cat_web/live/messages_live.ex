@@ -17,8 +17,7 @@ defmodule ChatCatWeb.MessagesLive do
     {:ok, socket}
   end
 
-  def handle_event("letter", %{"message_input" => message_input}, socket) do
-    dbg(message_input)
+  def handle_event("letter", %{"message_input" => _message_input}, socket) do
     {:noreply, socket}
   end
 
@@ -61,7 +60,6 @@ defmodule ChatCatWeb.MessagesLive do
         |> String.downcase()
         |> String.contains?(String.downcase(tag_input))
       end)
-      |> dbg
 
     send(self(), %{update_tags: filtered_tags})
 
@@ -104,18 +102,6 @@ defmodule ChatCatWeb.MessagesLive do
     {:noreply, socket}
   end
 
-  def handle_event(message, params, socket) do
-    message |> dbg()
-
-    params |> dbg
-
-    # socket =
-    #   socket
-    #   |> assign(:images, images)
-
-    {:noreply, socket}
-  end
-
   def handle_info(%{update_tags: tags}, socket) do
     images =
       tags
@@ -128,8 +114,6 @@ defmodule ChatCatWeb.MessagesLive do
   end
 
   def handle_info(%{update_images: images}, socket) do
-    images |> dbg
-
     socket =
       socket
       |> assign(:images, images)
