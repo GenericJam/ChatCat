@@ -14,6 +14,8 @@ defmodule ChatCatWeb.MessagesLive do
       |> assign(:messages, messages)
       |> assign(:form, %{"input_message" => ""})
 
+    send(self(), :get_assets)
+
     {:ok, socket}
   end
 
@@ -25,28 +27,27 @@ defmodule ChatCatWeb.MessagesLive do
     message =
       Chats.create_message!(%{message: message_input, sender_email: assigns.current_user.email})
 
-    PubSub.broadcast(:new_message, "update_messages", %{sender: assigns.current_user.email})
-
     socket =
       socket
       |> assign(:messages, assigns.messages ++ [message])
-      |> assign(:form, %{"input_message" => ""})
+      |> assign(:form, %{"input_message" => " "})
+
+    PubSub.broadcast(:new_message, "update_messages", %{sender: assigns.current_user.email})
 
     {:noreply, socket}
   end
 
   def handle_event("cat_menu", _params, %{assigns: assigns} = socket) do
     images =
-      0..20 |> Enum.map(fn _ -> "https://cataas.com/cat" end)
-
-    tags = ChatCat.Cataas.Request.tags()
+      assigns.image_ids
+      |> Enum.shuffle()
+      |> Enum.map(fn id -> "https://cataas.com/cat/#{id}" end)
 
     socket =
       socket
       |> assign(:images, images)
       |> assign(:live_action, :menu)
-      |> assign(:tags, tags)
-      |> assign(:filtered_tags, tags |> Enum.take(21))
+      |> assign(:filtered_tags, assigns.tags |> Enum.take(21))
       |> assign(:tag, %{})
 
     {:noreply, socket}
@@ -80,7 +81,7 @@ defmodule ChatCatWeb.MessagesLive do
     socket =
       socket
       |> assign(:messages, assigns.messages ++ [message])
-      |> assign(:form, %{"input_message" => ""})
+      |> assign(:form, %{"input_message" => " "})
       |> assign(:live_action, :new)
 
     {:noreply, socket}
@@ -113,6 +114,23 @@ defmodule ChatCatWeb.MessagesLive do
     {:noreply, socket}
   end
 
+  def handle_info(:get_assets, socket) do
+    tags = ChatCat.Cataas.Request.tags()
+
+    image_ids =
+      tags
+      |> Enum.take(10)
+      |> ChatCat.Cataas.Request.get_json()
+      |> Enum.map(fn %{"_id" => id} -> id end)
+
+    socket =
+      socket
+      |> assign(:tags, tags)
+      |> assign(:image_ids, image_ids)
+
+    {:noreply, socket}
+  end
+
   def handle_info(%{update_images: images}, socket) do
     socket =
       socket
@@ -121,7 +139,7 @@ defmodule ChatCatWeb.MessagesLive do
     {:noreply, socket}
   end
 
-  def handle_info(%{sender: sender}, socket) do
+  def handle_info(%{sender: _sender}, socket) do
     # Some logic of whether we should update
 
     messages = Chats.list_messages([:sender, :receiver])

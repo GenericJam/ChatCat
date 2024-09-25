@@ -23,7 +23,7 @@ defmodule ChatCatWeb.UserSessionController do
 
     user = Accounts.get_user_by_email_and_password(email, password)
 
-    if %Accounts.User{} = user do
+    if user != nil do
       conn
       |> put_flash(:info, info)
       |> UserAuth.log_in_user(user, user_params)

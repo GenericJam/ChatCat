@@ -11,7 +11,7 @@ defmodule ChatCatWeb.Live.MessagesLive.FormComponent do
           field={@tag[:input]}
           type="text"
           class="grow shrink basis-0 text-black text-xs font-medium leading-4 focus:outline-none"
-          placeholder="Type here..."
+          placeholder="Search tags here..."
           value=""
         />
       </.simple_form>

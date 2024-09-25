@@ -98,7 +98,7 @@
   <.simple_form for={@form} phx-change="letter" phx-submit="send" class="w-full">
     <.input
       name="message_input"
-      field={@form[:input_message]}
+      field={@form["input_message"]}
       type="text"
       class="grow shrink basis-0 text-black text-xs font-medium leading-4 focus:outline-none"
       placeholder="Type here..."
